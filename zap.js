@@ -52,13 +52,14 @@ function init()
 {
 	giftnum = Number($("#giftnum").val());
 	total = Number($("#total").val());
-	$("#myid").html('');
+	$("#myid").html('').append("Please wait...the best combinations are being hand picked for you...");
 	getdata();
 }
 
 // function to get the data from the Zappos API page and display the selected combination of product subsets with limited fields 
 
 function getdata(){
+	
 	if(!flag){
 		getjson(page);
 		page++;
@@ -115,6 +116,7 @@ function getjson(page){
 						pdt_arr.push(product[i]);
 					}
 					else{
+						$("#myid").html('');
 						flag = 1;
 						break;
 					}
