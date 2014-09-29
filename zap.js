@@ -4,72 +4,70 @@ var page = 1;
 var giftnum;
 var total;
 
-function combine(a, min) 
+function combine(a, min, subsets_total) 
 {
     var all = [];
     for (var i = min; i < a.length; i++) 
 	{
 		console.log("herell");
-        fn(i, a, [], all);
+        fn(i, a, [], all, subsets_total);
     }
 	
-    all.push(a);
+    //all.push(a);
     return all;
 }
 
-function fn(n, src, got, all) 
-	{	
-		var subsets_total = 0;
-		var curr_price = 0;
-        if (n == 0) 
+function fn(n, src, got, all, subsets_total) 
+{	
+	if (n == 0) 
+	{
+		if (got.length > 0) 
 		{
-            if (got.length > 0) 
-			{
-                all[all.length] = got;
-				console.log(n);
-            }
-			return;
-        }
-		
-        for (var j = 0; j < src.length; j++) 
-		{	
-			curr_price = Number(src[j]["price"].replace("$", ""));
-			subsets_total += curr_price;
-			if(subsets_total <= total)
-			{
-            fn(n - 1, src.slice(j + 1), got.concat([src[j]]), all);
-			
-			}
-			else
-			{
+			all[all.length] = got;
+		}
+		return;
+	}
+	
+	for (var j = 0; j < src.length; j++) 
+	{	
+		var curr_price = Number(src[j]["price"].replace("$", ""));
+		subsets_total += curr_price;
+		if(subsets_total <= total){
+			fn(n - 1, src.slice(j + 1), got.concat([src[j]]), all, subsets_total);
+		} else {
 			subsets_total = 0;
-			curr_price = 0;
 			break;
-			}
-        }
-        return;
-    }
+		}
+	}
+	return;
+}
 
 
 function init()
 {
-	giftnum = $("#giftnum").val();
+	giftnum = Number($("#giftnum").val());
 	total = Number($("#total").val());
 	$("#myid").html('');
 	getdata();
 }
 
 function getdata(){
-	//if(!flag){
+	if(!flag){
 		getjson(page);
-		// page++;
-	 //} 
-	//else {
+		page++;
+	 } 
+	else {
+	var subsets = combine(pdt_arr, giftnum, 0);
 	
-		console.log("here");
-		var subsets = combine(pdt_arr, giftnum);
-		
-	// }
+		for(var i=0; i < subsets.length; i++)
+		{	
+			for(var j = 0; j < subsets[i].length; j++){
+				var htmlstr = "Id:" + subsets[i][j]["productId"] + " Product Name: "+ subsets[i][j]["productName"] + " = " + subsets[i][j]["price"]+"<br>";
+				$("#myid").append(htmlstr);
+			}
+			$("#myid").append("<br><br>");
+		}
+	}
 }
 
 function getjson(page){
@@ -96,7 +94,6 @@ function getjson(page){
 				pdt_arr.push(product[i]);
 				}
 			} else {
-				//var each_pdt = [];
 				for(i=0;i<product.length;i++)
 				{
 					var price = Number(product[i]["price"].replace("$", ""));
@@ -109,9 +106,9 @@ function getjson(page){
 						break;
 					}
 				}
-				//pdt_arr.push(each_pdt);
 			}
-			//getdata();
+			getdata();
+			
 		}
 	});
 }
