@@ -1,33 +1,12 @@
 <html>
 	<body>
 		<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-		<script>
-			function getjson(page){
-				
-				var surl = "http://api.zappos.com/Search?key=52ddafbe3ee659bad97fcce7c53592916a6bfd73&term=&limit=100&sort={%22price%22:%22asc%22}&page="+page;
-				$.ajax({
-					url: surl,
-					dataType: "jsonp",
-					jsonp : "callback",
-					jsonpCallback: "jsonpcallback",
-					success: function(data){
-						//console.log(JSON.stringify(data));
-						var json_data = JSON.stringify(data); //json_data contains the json formatted data.
-						var a = JSON.parse(json_data);
-						var results = a["results"];
-						
-					for(i=0;i<results.length;i++)
-					{
-					var price = results[i]["price"];
-					var productid = results[i]["productId"];
-					$("#myid").append(productid +" "+ price);
-					}
-					  }
-					});
-			}
-		</script>
+		<script src="file:///C:/Users/adith_000/Desktop/Zappos/zap.js"></script>
+
 		<!-- getjson(<page no>) call the function with which page you wanted the data from -->
-		<button onclick="getjson(2);">Get</button>
+		Enter Number of Gifts: <input type="text" value="0" id="giftnum"><br>
+		Enter Total: <input type="number" value="0" id="total"><br>
+		<button onclick="init();">Get</button>
 		<div   id = "myid" ></div>
 		
 	</body>
